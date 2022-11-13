@@ -1,11 +1,13 @@
 <template>
   <div id="wrapper" class="container-fluid">
-    <h1>PAGAR CUOTA</h1> 
+    <h1>About Page</h1>
   </div>
 </template>
 
 
 <script>
-export default {}
-//TODO: Conectar api mp
+
+export default {
+  name: 'AboutView',
+}
 </script>

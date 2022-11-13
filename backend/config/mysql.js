@@ -1,13 +1,15 @@
 import mysql from 'mysql';
+import dotenv from 'dotenv'
+dotenv.config()
 
 export default class DB {
 
   constructor() {
     this.connection = mysql.createPool({
-      host: 'localhost',
-      port: '3306',
-      user: 'root',
-      database: 'cloud_aws',
+      host: process.env.DB_HOST,
+      port: process.env.PORT,
+      user: process.env.DB_USERNAME,
+      database: process.env.DB_DATABASE,
       });
   }
  

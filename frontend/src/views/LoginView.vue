@@ -57,11 +57,12 @@ export default {
 
         await axios.post(process.env.VUE_APP_API_URL + "/login", {username: this.username, password: this.password})
         .then(async resp => {
-            let data = resp.data
-            if(data.status && data.status === "error"){
-                Swal.fire('Error',data.message,'error')
+            if(resp.data.status && resp.data.status === "error"){
+                Swal.fire('Error',resp.data.message,'error')
             }else{
-                const user = JSON.stringify({ID_USER: data.ID_USER, NOMBRE: data.NOMBRE, APELLIDO: data.APELLIDO, DNI: data.DNI, ROL: data.ID_ROL})
+                let data = resp.data.user
+                axios.defaults.headers.common['Authorization'] = resp.data.token
+                const user = JSON.stringify({ID_USER: data.ID_USER, NOMBRE: data.NOMBRE, APELLIDO: data.APELLIDO, DNI: data.DNI, ROL: data.ID_ROL, VENCIMIENTO: data.VENCIMIENTO})
                 await localStorage.setItem('user', user)
                 this.$router.push({path: '/'})
             }

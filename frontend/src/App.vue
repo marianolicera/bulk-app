@@ -37,6 +37,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
+
 export default {
   name: 'AppVue',
   data(){
@@ -48,7 +49,7 @@ export default {
     logout(){
       localStorage.removeItem('user');
       this.$router.push({path: '/login'})
-    }
+    },
   },
   computed: {
     isLogin: function () {

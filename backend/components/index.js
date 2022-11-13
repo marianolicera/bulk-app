@@ -1,27 +1,28 @@
 import { Router } from 'express'
 import User from './controllers/UserController.js'
 // import { rolRequired, ROLE } from '../auth.js'
+import { validateToken } from '../config/auth.js'
 
 const router = Router()
 
 export default function userRoutes(app) {
-  
     app.use('/api', router)
 
   //router.get('/getRutinas', rolRequired(ROLE.User), User.getRutinas) //TODO: Control de acceso y permisos (auth.js)
 
     router.post('/login', User.login)
 
-    router.get('/getUserByID/:id', User.getUserByID)
+    router.get('/getUserByID/:id', validateToken, User.getUserByID)
 
-    router.get('/getRutinas/:id', User.getRutinas)
+    router.get('/getRutinas', validateToken, User.getRutinas)
 
-    router.post('/createUser', User.createUser)
+    router.post('/createUser', validateToken, User.createUser)
 
-    router.get('/getAllUsers', User.getAllUsers)
+    router.get('/getAllUsers', validateToken, User.getAllUsers)
 
-    router.delete('/deleteUser/:id', User.deleteUser)
+    router.delete('/deleteUser/:id', validateToken, User.deleteUser)
 
-    router.put('/changePassword/:id', User.changePassword) //TODO: Agregar cookie jwt para no mandar el usuario logueado por route
-
+    router.put('/changePassword', validateToken, User.changePassword)
+    
+    router.put('/membership', validateToken, User.membership)
 }

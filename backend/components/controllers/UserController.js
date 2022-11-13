@@ -1,4 +1,5 @@
 import User from '../services/UserService.js'
+import { generateAccessToken, getLoggedUser } from '../../config/auth.js'
 
 export default class UserController {
 
@@ -14,7 +15,12 @@ export default class UserController {
             message: 'Usuario no encontrado o datos incorrectos.'
         });
         } else {
-        return await res.status(200).json(login);
+          let tokenUser = await generateAccessToken(login)
+          return await res.status(200)
+          .json({
+            user: login,
+            token: tokenUser
+          })
         }
     } catch (err) {
       res.status(500).send(err);
@@ -42,7 +48,7 @@ export default class UserController {
 
   static async getRutinas(req, res, next) {
       try {
-          const id = req.params.id;
+          const id = await getLoggedUser(req)
           const rutinas = await User.getRutinas(id);
           if (!rutinas) {
             return await res.status(200).send({
@@ -117,7 +123,7 @@ export default class UserController {
 
     static async changePassword(req, res, next) {
       try {
-          const id = req.params.id
+          const id = await getLoggedUser(req)
           const newPass = req.body.newPass
           const oldPass = req.body.oldPass
           const user = await User.changePassword(id, newPass, oldPass);
@@ -137,4 +143,23 @@ export default class UserController {
         next(err);
       }
     }
+
+    static async membership(req, res, next) {
+      try {
+        const id = await getLoggedUser(req)
+          const user = await User.membership(id);
+          if (!user) {
+          return await res.status(200).send({
+              status: "error",
+              message: 'No se pudo pagar la suscripcion.'
+          });
+          } else {
+          return await res.status(200).json(user);
+          }
+      } catch (err) {
+        res.status(500).send(err);
+        next(err);
+      }
+    }
+
 }

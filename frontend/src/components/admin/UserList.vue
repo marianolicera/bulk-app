@@ -11,6 +11,7 @@
                     <th scope="col">NOMBRE</th>
                     <th scope="col">APELLIDO</th>
                     <th scope="col">ROL</th>
+                    <th scope="col">VENCIMIENTO</th>
                     <th scope="col">-</th>
                   </tr>
                 </thead>
@@ -37,7 +38,7 @@
                     </select>
                   </td>
                   <td class="col input-col add-user" @click="addUser()"><strong>AGREGAR</strong></td>
-                  
+
                 </tbody>
               </table>
             </div>

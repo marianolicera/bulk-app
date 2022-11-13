@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper" class="container-fluid">
     <UserInfo></UserInfo>
-    <div v-if="rol == 'ALUMNO' && rutinas">
+    <div v-if="rol == 'ALUMNO' && rutinas.length > 0">
         <div class="col">
           <div class="card">
             <div class="card-body">
@@ -47,13 +47,14 @@ export default {
   },
   async created(){
     if(this.rol == "ALUMNO"){ //TODO: CREAR UN COMPONENTE PARA ESTO
-      const id = JSON.parse(localStorage.getItem('user')).ID_USER
-      await axios.get(process.env.VUE_APP_API_URL + "/getRutinas/" + id)
+      await axios.get(process.env.VUE_APP_API_URL + "/getRutinas")
       .then(resp => {
+        if(resp.data[0].length > 0){
           let data = resp.data[0]
           this.rutinas = resp.data
           this.profesor = data[0].PROFESOR_NOMBRE + " " + data[0].PROFESOR_APELLIDO
           this.duracion = data[0].DURACION
+        }
       })
       .catch(err => console.log(err))
     }

@@ -87,15 +87,11 @@ export default class UserService {
     try {
       const password = dni
       const newRole = rol == 'ADMINISTRADOR' ? '0' : rol == 'ALUMNO' ? 1 : 2
-
-      // var date = new Date();
-      // var year = date.toLocaleString("default", { year: "numeric" });
-      // var month = date.toLocaleString("default", { month: "2-digit" });
-      // var day = date.toLocaleString("default", { day: "2-digit" });
-      // var formattedDate = day + "-" + month + "-" + year;
+      let date = new Date()
+      let newDate = new Date(date.setMonth(date.getMonth()+1))
 
       await db.query(
-        `INSERT INTO USUARIO VALUES (DEFAULT, ?, ?, ?, ?, ?, NOW(),DEFAULT)`, [dni, nombre, apellido, newRole, password]
+        `INSERT INTO USUARIO VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, DEFAULT)`, [dni, nombre, apellido, newRole, password, newDate]
       );
       const user = await db.query('SELECT ID_USER, DNI, NOMBRE, APELLIDO, ID_ROL, VENCIMIENTO FROM USUARIO WHERE DNI = ?', [dni])
       return user[0]
@@ -159,5 +155,26 @@ export default class UserService {
       });
     }
   }
+
+  static async membership(idUser) {
+    try {
+      let date = new Date()
+      let newDate = new Date(date.setMonth(date.getMonth()+1))
+
+      await db.query(
+        `UPDATE USUARIO SET VENCIMIENTO = ? WHERE ID_USER = ? `, [newDate,idUser]
+      );
+      const user = await db.query(
+        `SELECT VENCIMIENTO FROM USUARIO WHERE ID_USER = ?`, [idUser]
+      );
+      return user
+    } catch (err) {
+      console.log(err)
+      return ({
+        message: 'Error paying membership.'
+      });
+    }
+  }
+
 
 }

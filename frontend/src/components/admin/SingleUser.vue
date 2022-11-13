@@ -5,6 +5,7 @@
     <td>{{user.NOMBRE}}</td>
     <td>{{user.APELLIDO}}</td>
     <td>{{user.ID_ROL == 0 ? 'ADMINISTRADOR' : user.ID_ROL == 1 ? "ALUMNO" : "PROFESOR"}}</td>
+    <td :class="{textvencido: vencido}">{{vencimiento}}</td>
     <td @click="deleteUser(event)" style="cursor: pointer"><i class="fa fa-trash" aria-hidden="true"></i></td>
   </tr>
 </template>
@@ -39,10 +40,21 @@ export default {
                 },
             })
     }
+  },
+  computed:{
+    vencido: function (){
+      return new Date(this.user.VENCIMIENTO) < new Date()
+    },
+    vencimiento: function (){
+      return this.user.VENCIMIENTO.split('T')[0]
+    }
   }
 }
 
 </script>
 
 <style>
+.textvencido{
+  color:red
+}
 </style>
