@@ -45,34 +45,18 @@ export default class UserService {
   static async getRutinas(idUser) {
     try {
       let rutinas = []
-      const lunes = await db.query(
+      let dias = [1,2,3,4,5]
+      for (const dia of dias){
+        const rutina = await db.query(
         `SELECT RUTINA.*, EJERCICIO.*, (SELECT NOMBRE FROM USUARIO WHERE ID_USER = RUTINA.ID_PROFESOR) AS PROFESOR_NOMBRE, 
         (SELECT APELLIDO FROM USUARIO WHERE ID_USER = RUTINA.ID_PROFESOR) AS PROFESOR_APELLIDO
         FROM EJERCICIO 
         INNER JOIN RUTINA ON EJERCICIO.ID_RUTINA = RUTINA.ID_RUTINA 
         INNER JOIN USUARIO ON USUARIO.ID_USER = RUTINA.ID_ALUMNO 
-        WHERE ID_USER = ? AND EJERCICIO.DIA = 1`, [idUser]);
+        WHERE ID_USER = ? AND EJERCICIO.DIA = ? AND ENABLED = 1`, [idUser,dia]);
 
-      const mierc = await db.query(
-        `SELECT RUTINA.*, EJERCICIO.*, (SELECT NOMBRE FROM USUARIO WHERE ID_USER = RUTINA.ID_PROFESOR) AS PROFESOR_NOMBRE, 
-        (SELECT APELLIDO FROM USUARIO WHERE ID_USER = RUTINA.ID_PROFESOR) AS PROFESOR_APELLIDO
-        FROM EJERCICIO 
-        INNER JOIN RUTINA ON EJERCICIO.ID_RUTINA = RUTINA.ID_RUTINA 
-        INNER JOIN USUARIO ON USUARIO.ID_USER = RUTINA.ID_ALUMNO 
-        WHERE ID_USER = ? AND EJERCICIO.DIA = 3`, [idUser]);
-
-      const vier = await db.query(
-        `SELECT RUTINA.*, EJERCICIO.*, (SELECT NOMBRE FROM USUARIO WHERE ID_USER = RUTINA.ID_PROFESOR) AS PROFESOR_NOMBRE, 
-        (SELECT APELLIDO FROM USUARIO WHERE ID_USER = RUTINA.ID_PROFESOR) AS PROFESOR_APELLIDO
-        FROM EJERCICIO 
-        INNER JOIN RUTINA ON EJERCICIO.ID_RUTINA = RUTINA.ID_RUTINA 
-        INNER JOIN USUARIO ON USUARIO.ID_USER = RUTINA.ID_ALUMNO 
-        WHERE ID_USER = ? AND EJERCICIO.DIA = 5`, [idUser]);
-      
-      rutinas.push(lunes)
-      rutinas.push(mierc)
-      rutinas.push(vier)
-      
+        if(rutina.length > 0 )rutinas.push(rutina)
+      }
       return rutinas
     } catch (err) {
       console.log(err)
@@ -176,5 +160,56 @@ export default class UserService {
     }
   }
 
+  static async getAlumnos() {
+    try {
+      const users = await db.query(
+        `SELECT ID_USER, NOMBRE, APELLIDO, DNI, VENCIMIENTO FROM USUARIO WHERE DELETED = 0 AND ID_ROL = 1`, []
+      );
+      return users
+    } catch (err) {
+      console.log(err)
+      return ({
+        message: 'Error getting users.'
+      });
+    }
+  }
+
+  static async createRutina(idProfesor, idAlumno, rutina) {
+    try {
+      //Deshabilitar vieja rutina
+      await db.query(
+        `UPDATE RUTINA SET ENABLED = 0 WHERE ID_ALUMNO = ?`, [idAlumno]
+      );
+
+      //Nuevo id de rutina MAX(ID_RUTINA) + 1
+      let max = await db.query(
+        `SELECT MAX(ID_RUTINA) AS MAX FROM RUTINA`, []
+      );
+      const cont = Object.values(JSON.parse(JSON.stringify(max)))[0].MAX + 1
+
+      //Crear la nueva rutina
+      await db.query(
+        `INSERT INTO RUTINA VALUES (DEFAULT,?,?,8,1)`, [idAlumno,idProfesor]
+      );
+
+      let rut = JSON.parse(JSON.parse(JSON.stringify(rutina)))
+
+      for (const x of rut) {
+        await db.query(
+          `INSERT INTO EJERCICIO VALUES (DEFAULT, ?,?,?,?,?)`, [cont, x.ejercicio, x.dia, x.series, x.repeticiones ]
+        );
+      }
+      return {
+        status: 'Success',
+        message: 'La rutina fue creada con exito!'
+      }
+    } catch (err) {
+      console.log(err)
+      return ({
+        status: 'Error',
+        message: 'Error posting rutines.'
+      });
+    }
+  }
 
 }

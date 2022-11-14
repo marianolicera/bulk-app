@@ -162,4 +162,44 @@ export default class UserController {
       }
     }
 
+
+    static async getAlumnos(req, res, next) {
+      try {
+          const user = await User.getAlumnos();
+          if (!user) {
+          return await res.status(200).send({
+              status: "error",
+              message: 'Usuarios no encontrados.'
+          });
+          } else {
+          return await res.status(200).json(user);
+          }
+      } catch (err) {
+        res.status(500).send(err);
+        next(err);
+      }
+    }
+
+
+    static async createRutina(req, res, next) {
+      try {
+          const idProfesor = await getLoggedUser(req)
+          const idAlumno = req.params.idAlumno
+          const rutina = req.body.rutina
+
+
+          const rutinas = await User.createRutina(idProfesor, idAlumno, rutina);
+          if (!rutinas) {
+            return await res.status(200).send({
+                status: "Error",
+                message: 'Error creando rutina.'
+            });
+            } else {
+            return await res.status(200).json(rutinas);
+            }
+      } catch (err) {
+        res.status(500).send(err);
+        next(err);
+      }
+    }
 }

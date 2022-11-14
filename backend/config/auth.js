@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const generateAccessToken =  async (user) => {
-    return await jwt.sign(user, process.env.SECRET, {expiresIn: '10m'})
+    return await jwt.sign(user, process.env.SECRET, {expiresIn: '15m'})
 }
 
 export const validateToken =  async (req,res,next) => {

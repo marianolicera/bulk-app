@@ -6,7 +6,7 @@
     <td>{{user.APELLIDO}}</td>
     <td>{{user.ID_ROL == 0 ? 'ADMINISTRADOR' : user.ID_ROL == 1 ? "ALUMNO" : "PROFESOR"}}</td>
     <td :class="{textvencido: vencido}">{{vencimiento}}</td>
-    <td @click="deleteUser(event)" style="cursor: pointer"><i class="fa fa-trash" aria-hidden="true"></i></td>
+    <td @click="deleteUser(event)" class="trash-icon"><i class="fa fa-trash" aria-hidden="true"></i></td>
   </tr>
 </template>
 
@@ -56,5 +56,12 @@ export default {
 <style>
 .textvencido{
   color:red
+}
+.trash-icon{
+  cursor:pointer;
+  transition:0.2s;
+}
+.trash-icon:hover{
+  transform: scale(1.3)
 }
 </style>

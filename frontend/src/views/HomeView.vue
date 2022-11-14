@@ -19,7 +19,11 @@
       <div v-if="rol == 'ADMINISTRADOR'">
         <UserList></UserList>
       </div>
-    </div>
+
+      <div v-if="rol =='PROFESOR'">
+        <StudentList></StudentList>
+      </div>
+  </div>
 </template>
 
 <script>
@@ -29,6 +33,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import UserInfo from '../components/UserInfo.vue'
 import DayRutine from '../components/alumno/DayRutine.vue'
 import UserList from '../components/admin/UserList.vue'
+import StudentList from '../components/profesor/StudentList.vue'
 import axios from 'axios'
 
 export default {
@@ -37,6 +42,7 @@ export default {
     UserInfo,
     DayRutine,
     UserList,
+    StudentList
   },
   data(){
     return{

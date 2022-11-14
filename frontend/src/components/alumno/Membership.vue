@@ -8,7 +8,6 @@
               <div class="wrap-input">
                 <button class="login-btn" @click="payMembership()">PAGAR</button>
               </div>
-
             </div>
           </div>
         </div>
@@ -17,7 +16,7 @@
 
 <script>
 import axios from 'axios'
-// import Swal from 'sweetalert2'
+import Swal from 'sweetalert2'
 
 export default {
     name: 'ChangePassword',
@@ -37,7 +36,8 @@ export default {
             let user = JSON.parse(localStorage.getItem("user"));
             user.VENCIMIENTO = resp.data[0].VENCIMIENTO; 
             localStorage.setItem("user", JSON.stringify(user));
-            this.fecha = resp.data[0].VENCIMIENTO
+            this.fecha = resp.data[0].VENCIMIENTO.split('T')[0]
+            Swal.fire('Exito','La cuota fue pagada exitosamente','success')
         })
         .catch(err=> console.log(err))
       }
@@ -73,9 +73,9 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 40%;
-
+  width: 100%;
 }
+
 .wrap-text{
   display:flex;
   flex-direction: column;

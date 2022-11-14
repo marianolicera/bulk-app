@@ -25,4 +25,8 @@ export default function userRoutes(app) {
     router.put('/changePassword', validateToken, User.changePassword)
     
     router.put('/membership', validateToken, User.membership)
+
+    router.get('/getAlumnos', validateToken, User.getAlumnos)
+    
+    router.post('/createRutina/:idAlumno', validateToken, User.createRutina)
 }
