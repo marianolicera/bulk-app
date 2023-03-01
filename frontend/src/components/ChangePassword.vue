@@ -30,13 +30,13 @@ export default {
     },
     methods:{
       async changePass(){
-        const id = JSON.parse(localStorage.getItem('user')).ID_USER
+
 
         if(!this.oldPassword || !this.newPassword){
             return Swal.fire('Error', 'Datos incompletos','error')
         }
 
-        await axios.put(process.env.VUE_APP_API_URL + '/changePassword/' + id, {oldPass: this.oldPassword, newPass: this.newPassword})
+        await axios.put(process.env.VUE_APP_API_URL + '/changePassword', {oldPass: this.oldPassword, newPass: this.newPassword})
         .then(resp => {
             const status = resp.data.status
             const message = resp.data.message

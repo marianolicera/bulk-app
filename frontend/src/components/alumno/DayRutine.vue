@@ -34,7 +34,7 @@ export default {
     },
     computed:{
       dia: function () {
-          return this.rutina ? (this.rutina[0].DIA == 1 ? 'LUNES' : this.rutina[0].DIA == 3 ? 'MIERCOLES' : 'VIERNES') : ''
+          return this.rutina ? (this.rutina[0].DIA == 1 ? 'LUNES' : this.rutina[0].DIA == 2 ? 'MARTES' : this.rutina[0].DIA == 3 ? 'MIERCOLES' : this.rutina[0].DIA == 4 ? 'JUEVES' : 'VIERNES') : ''
       },
       ejercicios: function () {
         return JSON.parse(JSON.stringify(this.rutina))

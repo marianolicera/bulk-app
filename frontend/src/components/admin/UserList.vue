@@ -26,10 +26,10 @@
                     <input class="form-control" type="text" name="username" placeholder="DNI" maxlength="8" minlength="8" v-model="dni">
                   </td>
                   <td class="col input-col">
-                    <input class="form-control" type="text" name="username" placeholder="Nombre" maxlength="8" minlength="8" v-model="nombre">
+                    <input class="form-control" type="text" name="username" placeholder="Nombre" v-model="nombre">
                   </td>
                   <td class="col input-col">
-                    <input class="form-control" type="text" name="username" placeholder="Apellido" maxlength="8" minlength="8" v-model="apellido">
+                    <input class="form-control" type="text" name="username" placeholder="Apellido" v-model="apellido">
                   </td>
                   <td class="col input-col">
                     <select class="form-control" name="servicios" v-model="rol" >
